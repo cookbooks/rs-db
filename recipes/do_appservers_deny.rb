@@ -1,5 +1,4 @@
 # Cookbook Name:: db_mysql
-# Recipe:: do_firewall_open
 #
 # Copyright (c) 2011 RightScale Inc
 #
@@ -22,9 +21,9 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
-db "Open firewall to clients in deployment"do
-  firewall_port_state "open"
-  firewall_client_tag "loadbalancer:app="
-  action :firewall_set
+sys_firewall "Open this database's ports to all appservers" do
+  machine_tag "appserver:active=true"
+  port 3306 # mysql only for now
+  enable false
+  action :update
 end
