@@ -1,5 +1,4 @@
 # Cookbook Name:: db
-# Recipe:: default
 #
 # Copyright (c) 2011 RightScale Inc
 #
@@ -22,20 +21,10 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-rs_utils_marker :begin
+# TODO: add these to metadata
+set_unless[:db][:data_dir] = "/mnt/storage"
+set_unless[:db][:provider] = "db_mysql"
+set_unless[:db][:admin][:user] = "root"
+set_unless[:db][:admin][:password] = ""
 
-# Let others know we are a DB
-right_link_tag "database:active=true"
-
-<<<<<<< HEAD
-=======
-db node[:db][:data_dir] do
-  user node[:db][:admin][:user]
-  password node[:db][:admin][:password]
-  persist true
-  provider node[:db][:provider]
-  action :nothing
-end
-
->>>>>>> chef_refactor
-rs_utils_marker :end
+set_unless[:db][:backup][:lineage] = ""

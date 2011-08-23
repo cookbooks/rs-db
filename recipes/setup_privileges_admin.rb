@@ -1,5 +1,4 @@
 # Cookbook Name:: db
-# Recipe:: default
 #
 # Copyright (c) 2011 RightScale Inc
 #
@@ -22,20 +21,17 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-rs_utils_marker :begin
+log "==================== #{self.cookbook_name}::#{self.recipe_name} : Begin ===================="
+DATA_DIR = node[:db][:data_dir]
 
-# Let others know we are a DB
-right_link_tag "database:active=true"
+user = node[:db][:admin][:user]
+log "Adding #{user} with administrator privileges for all databases."
 
-<<<<<<< HEAD
-=======
-db node[:db][:data_dir] do
-  user node[:db][:admin][:user]
-  password node[:db][:admin][:password]
-  persist true
-  provider node[:db][:provider]
-  action :nothing
+db DATA_DIR do
+  privilege "administrator"
+  privilege_username user
+  privilege_password node[:db][:admin][:password]
+  privilege_database "*.*" # All databases
 end
 
->>>>>>> chef_refactor
-rs_utils_marker :end
+log "==================== #{self.cookbook_name}::#{self.recipe_name} : End ===================="
