@@ -1,4 +1,4 @@
-# Cookbook Name:: db_mysql
+# Cookbook Name:: db
 #
 # Copyright (c) 2011 RightScale Inc
 #
@@ -23,11 +23,22 @@
 
 rs_utils_marker :begin
 
-sys_firewall "Open this database's ports to all appservers" do
-  machine_tag "appserver:active=true"
-  port 3306 # mysql only for now
-  enable false
-  action :update
+DATA_DIR = node[:db][:data_dir]
+
+log "  Stopping database..."
+db DATA_DIR do
+  action :stop
+end
+
+log "  Creating block device..."
+block_device DATA_DIR do
+  lineage node[:db][:backup][:lineage]
+  action :create
+end
+
+log "  Moving database to block device and starting database..."
+db DATA_DIR do
+  action [ :move_data_dir, :start ]
 end
 
 rs_utils_marker :end

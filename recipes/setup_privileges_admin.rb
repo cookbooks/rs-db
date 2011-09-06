@@ -1,4 +1,4 @@
-# Cookbook Name:: db_mysql
+# Cookbook Name:: db
 #
 # Copyright (c) 2011 RightScale Inc
 #
@@ -23,11 +23,17 @@
 
 rs_utils_marker :begin
 
-sys_firewall "Open this database's ports to all appservers" do
-  machine_tag "appserver:active=true"
-  port 3306 # mysql only for now
-  enable false
-  action :update
+DATA_DIR = node[:db][:data_dir]
+
+user = node[:db][:admin][:user]
+log "Adding #{user} with administrator privileges for all databases."
+
+db DATA_DIR do
+  privilege "administrator"
+  privilege_username user
+  privilege_password node[:db][:admin][:password]
+  privilege_database "*.*" # All databases
+  action :set_privileges
 end
 
 rs_utils_marker :end

@@ -1,4 +1,4 @@
-# Cookbook Name:: db_mysql
+# Cookbook Name:: db
 #
 # Copyright (c) 2011 RightScale Inc
 #
@@ -21,13 +21,10 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-rs_utils_marker :begin
+set_unless[:db][:fqdn] = ""
+set_unless[:db][:data_dir] = "/mnt/storage"
+set_unless[:db][:provider] = "db_mysql"
+set_unless[:db][:admin][:user] = "root"
+set_unless[:db][:admin][:password] = ""
 
-sys_firewall "Open this database's ports to all appservers" do
-  machine_tag "appserver:active=true"
-  port 3306 # mysql only for now
-  enable false
-  action :update
-end
-
-rs_utils_marker :end
+set_unless[:db][:backup][:lineage] = ""

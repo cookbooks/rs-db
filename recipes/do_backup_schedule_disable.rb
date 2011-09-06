@@ -1,4 +1,4 @@
-# Cookbook Name:: db_mysql
+# Cookbook Name:: db
 #
 # Copyright (c) 2011 RightScale Inc
 #
@@ -23,11 +23,11 @@
 
 rs_utils_marker :begin
 
-sys_firewall "Open this database's ports to all appservers" do
-  machine_tag "appserver:active=true"
-  port 3306 # mysql only for now
-  enable false
-  action :update
+DATA_DIR = node[:db][:data_dir]
+
+block_device DATA_DIR do
+  cron_backup_recipe "#{self.cookbook_name}::do_backup"
+  action :backup_schedule_disable
 end
 
 rs_utils_marker :end
